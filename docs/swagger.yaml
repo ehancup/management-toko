@@ -1,0 +1,372 @@
+definitions:
+  auth.LoginReq:
+    properties:
+      email:
+        example: tester@gmail.com
+        type: string
+      password:
+        example: "12345678"
+        minLength: 8
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  auth.RegisterReq:
+    properties:
+      email:
+        example: tester@gmail.com
+        type: string
+      name:
+        example: tester
+        type: string
+      password:
+        example: "12345678"
+        minLength: 8
+        type: string
+    required:
+    - email
+    - name
+    - password
+    type: object
+  br.BaseSuccessResponse-any:
+    properties:
+      data:
+        description: Success bool   `json:"success" binding:"default:true" example:"true"`
+      message:
+        type: string
+    type: object
+  br.BaseSuccessResponse-store_DetailStoreRes:
+    properties:
+      data:
+        allOf:
+        - $ref: '#/definitions/store.DetailStoreRes'
+        description: Success bool   `json:"success" binding:"default:true" example:"true"`
+      message:
+        type: string
+    type: object
+  br.BaseSuccessResponsePagination-store_ListAllStoreRes:
+    properties:
+      data:
+        description: Success    bool               `json:"success" binding:"default:true"
+          example:"true"`
+        items:
+          $ref: '#/definitions/store.DetailStoreRes'
+        type: array
+      message:
+        type: string
+      pagination:
+        $ref: '#/definitions/br.PaginationResponse'
+    type: object
+  br.BaseSuccessResponsePagination-store_ListMyStoreRes:
+    properties:
+      data:
+        description: Success    bool               `json:"success" binding:"default:true"
+          example:"true"`
+        items:
+          $ref: '#/definitions/store.DetailStoreRes'
+        type: array
+      message:
+        type: string
+      pagination:
+        $ref: '#/definitions/br.PaginationResponse'
+    type: object
+  br.PaginationResponse:
+    properties:
+      page:
+        type: integer
+      page_size:
+        type: integer
+      total:
+        type: integer
+      total_page:
+        type: integer
+    type: object
+  product.CreateProductReq:
+    properties:
+      image:
+        example: ""
+        type: string
+      name:
+        example: item
+        minLength: 4
+        type: string
+      price:
+        example: 3000
+        type: integer
+    required:
+    - name
+    - price
+    type: object
+  store.CreateStoreReq:
+    properties:
+      description:
+        example: this is example of desc.
+        type: string
+      name:
+        example: store
+        minLength: 4
+        type: string
+    required:
+    - name
+    type: object
+  store.DetailStoreRes:
+    properties:
+      avatar:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      user:
+        $ref: '#/definitions/store.LATRuser'
+      user_id:
+        type: integer
+    type: object
+  store.LATRuser:
+    properties:
+      avatar:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+    type: object
+  store.UpdateStoreReq:
+    properties:
+      avatar:
+        example: http://localhost:3000/public/propil.png
+        type: string
+      description:
+        example: this is example of desc.
+        type: string
+      name:
+        example: store
+        minLength: 4
+        type: string
+    required:
+    - name
+    type: object
+host: localhost:3000
+info:
+  contact:
+    email: rhanysuf24@gmail.com
+    name: Ehancup
+    url: http://www.swagger.io/support
+  description: This is a Gin Boilerplate for Rest API.
+  termsOfService: http://swagger.io/terms/
+  title: Toko manajer
+  version: "1.0"
+paths:
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: "Login \t  with credential"
+      parameters:
+      - description: login payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/auth.LoginReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/br.BaseSuccessResponse-any'
+      summary: Login
+      tags:
+      - auth
+  /product/create/{id}:
+    post:
+      consumes:
+      - application/json
+      description: create toko for 'user' role
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/product.CreateProductReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema: {}
+      security:
+      - BearerAuth: []
+      summary: Create Product
+      tags:
+      - product
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: Register with credential
+      parameters:
+      - description: Register Payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/auth.RegisterReq'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/br.BaseSuccessResponse-any'
+      summary: Register
+      tags:
+      - auth
+  /store/create:
+    post:
+      consumes:
+      - application/json
+      description: create toko for 'user' role
+      parameters:
+      - description: payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/store.CreateStoreReq'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/br.BaseSuccessResponse-any'
+      security:
+      - BearerAuth: []
+      summary: Create Toko (user)
+      tags:
+      - store
+  /store/detail/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get detail store
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/br.BaseSuccessResponse-store_DetailStoreRes'
+      summary: Detail
+      tags:
+      - store
+  /store/list-all:
+    get:
+      consumes:
+      - application/json
+      description: get all toko with pagination for admin
+      parameters:
+      - description: page
+        in: query
+        name: page
+        type: integer
+      - description: page size
+        in: query
+        name: page_size
+        type: integer
+      - description: search
+        in: query
+        name: q
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/br.BaseSuccessResponsePagination-store_ListAllStoreRes'
+      security:
+      - BearerAuth: []
+      summary: get all toko (admin)
+      tags:
+      - store
+  /store/my:
+    get:
+      consumes:
+      - application/json
+      description: get my toko with pagination for user
+      parameters:
+      - description: page
+        in: query
+        name: page
+        type: integer
+      - description: page size
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/br.BaseSuccessResponsePagination-store_ListMyStoreRes'
+      security:
+      - BearerAuth: []
+      summary: get my toko (user)
+      tags:
+      - store
+  /store/update/{id}:
+    put:
+      consumes:
+      - application/json
+      description: update store
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/store.UpdateStoreReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/br.BaseSuccessResponse-any'
+      security:
+      - BearerAuth: []
+      summary: update (owner)
+      tags:
+      - store
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
