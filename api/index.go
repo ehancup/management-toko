@@ -14,7 +14,7 @@ import (
 
 	log "github.com/charmbracelet/log"
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
+	// "github.com/joho/godotenv"
 
 	_ "gin-boilerplate/docs"
 
@@ -26,11 +26,11 @@ import (
 func Handler(w http.ResponseWriter, r *http.Request) {
 	// testing
 
-	err := godotenv.Load()
+	// err := godotenv.Load()
 
-	if err != nil {
-		logger.Fatal("Error loading .env file")
-	}
+	// if err != nil {
+	// 	logger.Fatal("Error loading .env file")
+	// }
 
 	/*
 		user commmented code below to use database
