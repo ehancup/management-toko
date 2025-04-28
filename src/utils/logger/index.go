@@ -13,7 +13,7 @@ var (
 
 func init() {
 	Log = log.NewWithOptions(os.Stderr, log.Options{
-		ReportCaller: false,
+		ReportCaller: true,
 		ReportTimestamp: true,
 		TimeFormat: "2006/01/02 15:04",
 		Prefix: "Toko Manager🍪 ",
