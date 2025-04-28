@@ -1,4 +1,4 @@
-package api
+package handler
 
 import (
 	// "fmt"
@@ -23,7 +23,7 @@ import (
 	"github.com/swaggo/gin-swagger"
 )
 
-func BoostrapApp(w http.ResponseWriter, r *http.Request) {
+func Handler(w http.ResponseWriter, r *http.Request) {
 	// testing
 
 	err := godotenv.Load()
